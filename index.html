@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> <!--Criando Cabecalho-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird - Patrick Cohenn</title> <!-- Titulo da Pagina-->
+</head>
+<body>
+    <canvas id="game-canvas" width="320" height="480"></canvas> <!-- Tag Canvas(quadro) Para desenhar todas as imagens-->
+    <style>
+        /*Css para centralizar*/
+        body {
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        /*Borda pra o jogo*/
+        canvas {
+          border: 2px solid rgb(58, 3, 255); /* Cor azul para ver a borada, tirar no final*/
+          display: block;
+          margin: 0 auto;
+        }
+    </style>
+
+    <script src="./jogo.js"></script>
+</body>
+</html>
