@@ -1,14 +1,15 @@
 console.log('[Patrick Cohenn] Flappy Bird'); //Mostrar o que esta acontecendo e mostra que iniciou.
 
-/*--------------------------------------------------------------------
-                        Criando Sprites
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-                          Criando Sprites                           */
+/*---------------------------------------------------------------------*/
 const sprites = new Image();
 sprites.src= './sprites.png';
 
-/*--------------------------------------------------------------------
-                        Definindo Canvas
---------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------*/
+/*-                         Definindo Canvas                           */
+/*---------------------------------------------------------------------*/
 const canvas = document.querySelector('canvas');  //Selecionando a Tag do Canvas.
 const contexto = canvas.getContext('2d'); // Definido jogo como 2D.
 
@@ -17,11 +18,11 @@ function test(){
     sprites, 161, 117, 33, 24, 10, 50, 34, 24)
 }
 
-/*--------------------------------------------------------------------
-                         Background
-                       Criando Fundo
---------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------*/
+/*-                           Background                               */
+/*-                         Criando Fundo                              */
+/*---------------------------------------------------------------------*/
 const planoDeFundo = {
   spriteX: 390, //(pronto inicial da imagem na PNG no exio X)
   spriteY: 0, //(pronto inicial da imagem na PNG no exio Y)
@@ -51,9 +52,9 @@ const planoDeFundo = {
     );
   }
 }
-/*--------------------------------------------------------------------
-                       Criando o Chao
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-                         Criando o Chao                             */
+/*---------------------------------------------------------------------*/
 
 const chao = {
   spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
@@ -81,23 +82,23 @@ const chao = {
   }
 }
 
-/*--------------------------------------------------------------------
-                Fazendo a Colisao 
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-                      Fazendo a Colisao                             */
+/*---------------------------------------------------------------------*/
 function fazColisao (flappyBird, chao) {
   const flappyBirdY = flappyBird.y + flappyBird.altura;
   const chaoY = chao.y;
   if (flappyBirdY >= chaoY) {
     return true;
   }
-
   return false;
 }
 
-function criaFlappyBird () {
-    /*--------------------------------------------------------------------
-                    Criando uma estrutra do passarinho
-    --------------------------------------------------------------------*/
+function criaFlappyBird() {
+
+    /*---------------------------------------------------------------------*/
+    /*                Criando uma estrutra do passarinho                   */
+    /*---------------------------------------------------------------------*/
     const flappyBird = {
       
       spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
@@ -120,12 +121,13 @@ function criaFlappyBird () {
       atualiza() {
         if(fazColisao(flappyBird, chao)) {
           console.log("colisao");
-          mudarParaTela(Telas.INICIO);
+          mudarParaTela(Telas.mensagemGetReady);
           return;
         }
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
         flappyBird.y = flappyBird.y + flappyBird.velocidade; //Criando movimento de queda do Bird
       },
+      
       desenha() {
         //Utilizando o maximo de parametros convorme os parametros.
         contexto.drawImage(
@@ -140,9 +142,9 @@ function criaFlappyBird () {
     return flappyBird;
 }
 
-/*--------------------------------------------------------------------
-                        Mensagem de 'Get REady'
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-                    Mensagem de 'Get REady'                         */
+/*---------------------------------------------------------------------*/
 const mensagemGetReady = {
   sX: 134,
   sY: 0,
@@ -163,65 +165,71 @@ const mensagemGetReady = {
 
 const globais = {};
 
-/*--------------------------------------------------------------------
-                        Criando as Telas
---------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------*/
+/*-                       Criando as Telas                             */
+/*---------------------------------------------------------------------*/
 let telaAtiva = {};
 
-
+/*---------------------------------------------------------------------*/
+/*-                    Funcao para mudar tela                          */
+/*---------------------------------------------------------------------*/
 function mudarParaTela(novaTela){
   telaAtiva = novaTela;
-  if(telaAtiva.incializa) { 
-    incializa();
-  }
-}
 
-/*--------------------------------------------------------------------
-                        Tela Inicio
---------------------------------------------------------------------*/
+  if(telaAtiva.inicializa) { 
+      telaAtiva.inicializa();
+    
+  }
+} 
+
+/*---------------------------------------------------------------------*/
+/*-                        Tela Inicio                                 */
+/*---------------------------------------------------------------------*/
 const Telas = {
   INICIO:{
-    incializa () {
+    inicializa() {
       globais.flappyBird = criaFlappyBird();
+      
     },
     desenha() {
       planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
       chao.desenha();/*Desenhado o Chao*/
-      flappyBird.desenha(); /*Desenhado o Passaro*/
+      globais.flappyBird.desenha(); /*Desenhado o Passaro*/
       mensagemGetReady.desenha();
     },
     click(){
       mudarParaTela(Telas.JOGO);
     },
     atualiza() {
-      flappyBird.atualiza();
+      globais.flappyBird.atualiza();
     }
   }
 };
 
-/*--------------------------------------------------------------------
-                        Tela de Jogos
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-                        Tela de Jogos                               */
+/*---------------------------------------------------------------------*/
 Telas.JOGO = {
   desenha() {
     planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
     chao.desenha();/*Desenhado o Chao*/
-    flappyBird.desenha(); /*Desenhado o Passaro*/
+    globais.flappyBird.desenha(); /*Desenhado o Passaro*/
   },
   /*movimento de pular do Bird*/
   click(){
-    flappyBird.pula();
+    globais.flappyBird.pula();
   },
   atualiza(){
-    flappyBird.atualiza();
+    globais.flappyBird.atualiza();
   }
 };
 
-
-/*--------------------------------------------------------------------
-          Criando uma funcao para gerar um loop continuo 
-               que irar desenhar sem para a imagem.
---------------------------------------------------------------------*/
+/*---------------------------------------------------------------------*/
+/*-       Criando uma funcao para gerar um loop continuo               */
+/*-            que irar desenhar sem para a imagem.                    */
+/*---------------------------------------------------------------------*/
+      
 
 function loop() {
   telaAtiva.desenha();
