@@ -3,7 +3,7 @@ console.log ('Siga @xnerdbrasil');
 
 
 /*---------------------------------------------------------------------*/
-/*-                          Criando efeito sonoro                           */
+/*-                     Criando efeito sonoro                          */
 /*---------------------------------------------------------------------*/
 const  som_HIT =new Audio();
 som_HIT.src = './efeitos/hit.wav' //som de hit
@@ -13,6 +13,11 @@ som_HIT.src = './efeitos/hit.wav' //som de hit
 /*---------------------------------------------------------------------*/
 const sprites = new Image();
 sprites.src= './sprites.png';
+
+/*---------------------------------------------------------------------*/
+/*-            Craindo Varaiavel para calcuçar frame                   */
+/*---------------------------------------------------------------------*/
+let frames = 0;
 
 
 /*---------------------------------------------------------------------*/
@@ -137,27 +142,35 @@ function criaFlappyBird() {
       },
 
       atualiza() {
-        if(fazColisao(flappyBird, chao)) {
+        if(fazColisao(flappyBird, globais.chao)) {
           console.log("colisao");
-<<<<<<< Updated upstream
-          mudarParaTela(Telas.INICIO);
-=======
           som_HIT.play();
           setTimeout(()=>{
             mudarParaTela(Telas.INICIO);
           }, 20);
->>>>>>> Stashed changes
           return;
         }
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
         flappyBird.y = flappyBird.y + flappyBird.velocidade; //Criando movimento de queda do Bird
       },
       
+      movimentos: [ //Criando os spirtes da asa batando.
+        {spriteX: 0, spriteY: 0},
+        {spriteX: 0, spriteY: 26},
+        {spriteX: 0, spriteY: 52},
+      ],
+
+     // frameAtual,
+     // atualizaOFrameAtual(){
+
+      },
       desenha() {
+        const {spriteX, spriteY} = flappyBird.movimentos[1];
         //Utilizando o maximo de parametros convorme os parametros.
         contexto.drawImage(
           sprites,/*image,*/
-          flappyBird.spriteX, flappyBird.spriteY,/*sx, sy, Sprite x e Y (Coordenada onde esta o passaro na imagem).*/
+          spriteX, spriteY,
+          //flappyBird.spriteX, flappyBird.spriteY,/*sx, sy, Sprite x e Y (Coordenada onde esta o passaro na imagem).*/
           flappyBird.largura, flappyBird.altura,/*sWidth, sHeight,(Tamanho do recorte na Sprite )*/
           flappyBird.x, flappyBird.y,/*dx, dy, (Onde vamos densenha no Canvas)*/
           flappyBird.largura, flappyBird.altura/*dWidth, dHeight (Tamanho do Bird)*/
@@ -258,6 +271,8 @@ Telas.JOGO = {
 function loop() {
   telaAtiva.desenha();
   telaAtiva.atualiza();
+
+//frames = frames+1; //atualizando os frames
 /*--------------------------------------------------------------------
           Funcao para ter uma otimicacao no javaScrip. 
                     Estudar mais ela.
