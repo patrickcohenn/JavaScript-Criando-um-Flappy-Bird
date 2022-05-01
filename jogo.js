@@ -1,4 +1,12 @@
 console.log('[Patrick Cohenn] Flappy Bird'); //Mostrar o que esta acontecendo e mostra que iniciou.
+console.log ('Siga @xnerdbrasil');
+
+
+/*---------------------------------------------------------------------*/
+/*-                          Criando efeito sonoro                           */
+/*---------------------------------------------------------------------*/
+const  som_HIT =new Audio();
+som_HIT.src = './efeitos/hit.wav' //som de hit
 
 /*---------------------------------------------------------------------*/
 /*-                          Criando Sprites                           */
@@ -55,31 +63,42 @@ const planoDeFundo = {
 /*---------------------------------------------------------------------*/
 /*-                         Criando o Chao                             */
 /*---------------------------------------------------------------------*/
-
-const chao = {
-  spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
-  spriteY: 610, //(pronto inicial da imagem na PNGno exio Y)
-  largura: 224,
-  altura: 112,
-  x: 0, //(posicao no canvas)
-  y: canvas.height-112, //(posicao no canvas)
-  desenha() {
-    contexto.drawImage(
-      sprites,
-      chao.spriteX, chao.spriteY,
-      chao.largura, chao.altura,
-      chao.x, chao.y,
-      chao.largura, chao.altura
-    );
-
-    contexto.drawImage(
-      sprites,
-      chao.spriteX, chao.spriteY,
-      chao.largura, chao.altura,
-      (chao.x+chao.largura), chao.y,
-      chao.largura, chao.altura
-    );
+function criaChao() {
+  const chao = {
+    spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
+    spriteY: 610, //(pronto inicial da imagem na PNGno exio Y)
+    largura: 224,
+    altura: 112,
+    x: 0, //(posicao no canvas)
+    y: canvas.height-112, //(posicao no canvas)
+    
+    atualiza() {//funcao que cira movimento no chao.
+      console.log('vai chao!!');
+      const movimentoDoCao = 1;
+      const repeteEm = chao.largura/2; //determinado um fim para reiniar o chao
+      const movimentacao = chao.x - movimentoDoCao; //Chao nao sai da tela
+      chao.x = movimentacao % repeteEm; //movimentenado o chao.
+      console.log(chao.x);
+    },
+    desenha() {
+      contexto.drawImage(
+        sprites,
+        chao.spriteX, chao.spriteY,
+        chao.largura, chao.altura,
+        chao.x, chao.y,
+        chao.largura, chao.altura
+      );
+  
+      contexto.drawImage(
+        sprites,
+        chao.spriteX, chao.spriteY,
+        chao.largura, chao.altura,
+        (chao.x+chao.largura), chao.y,
+        chao.largura, chao.altura
+      );
+    }
   }
+  return chao;
 }
 
 /*---------------------------------------------------------------------*/
@@ -100,7 +119,6 @@ function criaFlappyBird() {
     /*                Criando uma estrutra do passarinho                   */
     /*---------------------------------------------------------------------*/
     const flappyBird = {
-      
       spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
       spriteY: 0, //(pronto inicial da imagem na PNGno exio Y)
       largura: 33,
@@ -121,7 +139,14 @@ function criaFlappyBird() {
       atualiza() {
         if(fazColisao(flappyBird, chao)) {
           console.log("colisao");
+<<<<<<< Updated upstream
           mudarParaTela(Telas.INICIO);
+=======
+          som_HIT.play();
+          setTimeout(()=>{
+            mudarParaTela(Telas.INICIO);
+          }, 20);
+>>>>>>> Stashed changes
           return;
         }
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
@@ -163,8 +188,8 @@ const mensagemGetReady = {
   }
 }
 
-const globais = {};
 
+const globais = {};
 
 /*---------------------------------------------------------------------*/
 /*-                       Criando as Telas                             */
@@ -190,11 +215,11 @@ const Telas = {
   INICIO:{
     inicializa() {
       globais.flappyBird = criaFlappyBird();
-      
+      globais.chao = criaChao();
     },
     desenha() {
       planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
-      chao.desenha();/*Desenhado o Chao*/
+      globais.chao.desenha();/*Desenhado o Chao*/
       globais.flappyBird.desenha(); /*Desenhado o Passaro*/
       mensagemGetReady.desenha();
     },
@@ -202,7 +227,7 @@ const Telas = {
       mudarParaTela(Telas.JOGO);
     },
     atualiza() {
-      globais.flappyBird.atualiza();
+      globais.chao.atualiza();
     }
   }
 };
@@ -213,7 +238,7 @@ const Telas = {
 Telas.JOGO = {
   desenha() {
     planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
-    chao.desenha();/*Desenhado o Chao*/
+    globais.chao.desenha();/*Desenhado o Chao*/
     globais.flappyBird.desenha(); /*Desenhado o Passaro*/
   },
   /*movimento de pular do Bird*/
@@ -229,7 +254,6 @@ Telas.JOGO = {
 /*-       Criando uma funcao para gerar um loop continuo               */
 /*-            que irar desenhar sem para a imagem.                    */
 /*---------------------------------------------------------------------*/
-      
 
 function loop() {
   telaAtiva.desenha();
