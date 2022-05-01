@@ -121,7 +121,7 @@ function criaFlappyBird() {
       atualiza() {
         if(fazColisao(flappyBird, chao)) {
           console.log("colisao");
-          mudarParaTela(Telas.mensagemGetReady);
+          mudarParaTela(Telas.INICIO);
           return;
         }
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
