@@ -155,17 +155,28 @@ function criaFlappyBird() {
       },
       
       movimentos: [ //Criando os spirtes da asa batando.
-        {spriteX: 0, spriteY: 0},
-        {spriteX: 0, spriteY: 26},
-        {spriteX: 0, spriteY: 52},
+        {spriteX: 0, spriteY: 0},//acima
+        {spriteX: 0, spriteY: 26},//meio
+        {spriteX: 0, spriteY: 52},//baixo
       ],
+    frameAtual: 0,
+    //Calculando o movimento repetitivo do bater de asa do bird.
+    atualizaOFrameAtual(){
+      //Limitando o frames.
+      const itervaloDeFrames = 9;
+      const passouOIntervalo = frames % itervaloDeFrames === 0;
+      //if para saber quando mudar o frame.
+      if(passouOIntervalo){
+        const baseDoIncremento = 1;
+        const incremento = baseDoIncremento+flappyBird.frameAtual;
+        const baseRepeticao = flappyBird.movimentos.length;
+        flappyBird.frameAtual = incremento % baseRepeticao;
+      };
+    },
 
-     // frameAtual,
-     // atualizaOFrameAtual(){
-
-      },
       desenha() {
-        const {spriteX, spriteY} = flappyBird.movimentos[1];
+        flappyBird.atualizaOFrameAtual();
+        const {spriteX, spriteY} = flappyBird.movimentos[flappyBird.frameAtual];
         //Utilizando o maximo de parametros convorme os parametros.
         contexto.drawImage(
           sprites,/*image,*/
@@ -272,7 +283,7 @@ function loop() {
   telaAtiva.desenha();
   telaAtiva.atualiza();
 
-//frames = frames+1; //atualizando os frames
+frames = frames+1; //atualizando os frames
 /*--------------------------------------------------------------------
           Funcao para ter uma otimicacao no javaScrip. 
                     Estudar mais ela.
