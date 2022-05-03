@@ -78,12 +78,12 @@ function criaChao() {
     y: canvas.height-112, //(posicao no canvas)
     
     atualiza() {//funcao que cira movimento no chao.
-      console.log('vai chao!!');
+      //console.log('vai chao!!');
       const movimentoDoCao = 1;
       const repeteEm = chao.largura/2; //determinado um fim para reiniar o chao
       const movimentacao = chao.x - movimentoDoCao; //Chao nao sai da tela
       chao.x = movimentacao % repeteEm; //movimentenado o chao.
-      console.log(chao.x);
+      //console.log(chao.x);
     },
     desenha() {
       contexto.drawImage(
@@ -118,6 +118,10 @@ function fazColisao (flappyBird, chao) {
   return false;
 }
 
+
+/*---------------------------------------------------------------------*/
+/*-                    Funcao cria FlappyBird'                         */
+/*---------------------------------------------------------------------*/
 function criaFlappyBird() {
 
     /*---------------------------------------------------------------------*/
@@ -192,6 +196,108 @@ function criaFlappyBird() {
 }
 
 /*---------------------------------------------------------------------*/
+/*-                       Funcao cria cano                             */
+/*---------------------------------------------------------------------*/
+function criaCanos() {
+  const canos = {
+      largura: 52,
+      altura: 400,
+      chao: {
+        spriteX: 0,
+        spriteY: 169,
+      },
+     ceu: {
+        spriteX: 52,
+        spriteY: 169,
+      },
+     espaco: 80,
+     desenha(){
+       canos.pares.forEach(function(par){
+        const yRandom = par.y;
+        const espacamentoEntreCanos = 90;
+        //Desenho do Cano Ceu
+        const canoCeuX = par.x;
+        const canoCeuY = yRandom;
+        
+        contexto.drawImage(
+           sprites,
+           canos.ceu.spriteX, canos.ceu.spriteY,
+           canos.largura, canos.altura,
+           canoCeuX, canoCeuY,
+           canos.largura, canos.altura,
+         )
+         
+         par.canoCeu = {
+          x: canoCeuX,
+          y: canos.altura + canoCeuY,
+        }
+         //Desenho Cano Chao
+        const canoChaoX = par.x;
+        const canoChaoY = canos.altura + espacamentoEntreCanos + yRandom;
+        contexto.drawImage(
+           sprites,
+           canos.chao.spriteX, canos.chao.spriteY,
+           canos.largura, canos.altura,
+           canoChaoX, canoChaoY,
+           canos.largura, canos.altura,
+        );
+        par.canoChao = {
+          x: canoChaoX,
+          y: canoChaoY,
+        }
+
+       })
+    },
+
+    temColisaoComOFlappyBird(par){
+      const cabecaDoFlappyBir = globais.flappyBird.y;
+      const peDoFlappyBird = globais.flappyBird.y + globais.flappyBird.altura;
+
+      if ((globais.flappyBird.x + globais.flappyBird.largura) >= par.x){
+        console.log('Bateu nos canos')
+        if(cabecaDoFlappyBir <= par.canoCeu.y){
+          console.log('Bateu a Cabeca');
+          return true;
+        };
+        if(peDoFlappyBird >= par.canoChao.y){
+          console.log('Bateu o pe');
+          return true;
+        };
+        return false;
+      };
+    },
+
+    pares:[],
+    
+    atualiza() {
+      const passou100Frames = frames % 100 === 0;
+      if (passou100Frames){
+        //console.log('Desenha canos!');
+        //Deixando a variacao dos canos aleatorio.
+        canos.pares.push({
+          //Iniclizando o cano no inico da tela
+          x: canvas.width,
+          y: -150 * (Math.random() + 1),
+        });
+      }
+
+      canos.pares.forEach(function(par)  {
+        par.x = par.x - 2;
+
+        if (canos.temColisaoComOFlappyBird(par)){
+          console.log('Tem colisao com o cano!')
+        }
+        if (par.x + canos.largura <= 0){
+          canos.pares.shift();
+          //console.log('Deleta Cano')
+        }
+      });
+    }
+  }
+return canos;
+}
+
+/*---------------------------------------------------------------------*/
 /*-                    Mensagem de 'Get REady'                         */
 /*---------------------------------------------------------------------*/
 const mensagemGetReady = {
@@ -240,18 +346,22 @@ const Telas = {
     inicializa() {
       globais.flappyBird = criaFlappyBird();
       globais.chao = criaChao();
+      globais.canos = criaCanos();
     },
     desenha() {
       planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
+      globais.canos.desenha();
       globais.chao.desenha();/*Desenhado o Chao*/
       globais.flappyBird.desenha(); /*Desenhado o Passaro*/
-      mensagemGetReady.desenha();
+      //mensagemGetReady.desenha();
+      
     },
     click(){
       mudarParaTela(Telas.JOGO);
     },
     atualiza() {
       globais.chao.atualiza();
+      globais.canos.atualiza();
     }
   }
 };
@@ -262,6 +372,7 @@ const Telas = {
 Telas.JOGO = {
   desenha() {
     planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
+    globais.canos.desenha();
     globais.chao.desenha();/*Desenhado o Chao*/
     globais.flappyBird.desenha(); /*Desenhado o Passaro*/
   },
@@ -271,6 +382,7 @@ Telas.JOGO = {
   },
   atualiza(){
     globais.flappyBird.atualiza();
+    globais.canos.atualiza();
   }
 };
 
@@ -280,10 +392,10 @@ Telas.JOGO = {
 /*---------------------------------------------------------------------*/
 
 function loop() {
+
   telaAtiva.desenha();
   telaAtiva.atualiza();
-
-frames = frames+1; //atualizando os frames
+  frames = frames+1; //atualizando os frames
 /*--------------------------------------------------------------------
           Funcao para ter uma otimicacao no javaScrip. 
                     Estudar mais ela.
