@@ -31,7 +31,6 @@ function test(){
     sprites, 161, 117, 33, 24, 10, 50, 34, 24)
 }
 
-
 /*---------------------------------------------------------------------*/
 /*-                           Background                               */
 /*-                         Criando Fundo                              */
@@ -65,6 +64,7 @@ const planoDeFundo = {
     );
   }
 }
+
 /*---------------------------------------------------------------------*/
 /*-                         Criando o Chao                             */
 /*---------------------------------------------------------------------*/
@@ -107,92 +107,79 @@ function criaChao() {
 }
 
 /*---------------------------------------------------------------------*/
-/*-                      Fazendo a Colisao                             */
-/*---------------------------------------------------------------------*/
-function fazColisao (flappyBird, chao) {
-  const flappyBirdY = flappyBird.y + flappyBird.altura;
-  const chaoY = chao.y;
-  if (flappyBirdY >= chaoY) {
-    return true;
-  }
-  return false;
-}
-
-
-/*---------------------------------------------------------------------*/
 /*-                    Funcao cria FlappyBird'                         */
 /*---------------------------------------------------------------------*/
 function criaFlappyBird() {
 
-    /*---------------------------------------------------------------------*/
-    /*                Criando uma estrutra do passarinho                   */
-    /*---------------------------------------------------------------------*/
-    const flappyBird = {
-      spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
-      spriteY: 0, //(pronto inicial da imagem na PNGno exio Y)
-      largura: 33,
-      altura: 24,
-      x: 10, //(posicao no canvas)
-      y: 60, //(posicao no canvas)
-      pulo: 4.8,
-      gravidade: 0.2,//Gravidade do jogo (Faz o passaro cair)
-      velocidade: 0,
+  /*---------------------------------------------------------------------*/
+  /*                Criando uma estrutra do passarinho                   */
+  /*---------------------------------------------------------------------*/
+  const flappyBird = {
+    spriteX: 0, //(pronto inicial da imagem na PNGno exio X)
+    spriteY: 0, //(pronto inicial da imagem na PNGno exio Y)
+    largura: 33,
+    altura: 24,
+    x: 10, //(posicao no canvas)
+    y: 60, //(posicao no canvas)
+    pulo: 4.8,
+    gravidade: 0.19,//Gravidade do jogo (Faz o passaro cair)
+    velocidade: 0,
 
 
-      pula() {
-        console.log('I believe I can fly')
-        flappyBird.velocidade = -flappyBird.pulo;
-        console.log(flappyBird.velocidade);
-      },
-
-      atualiza() {
-        if(fazColisao(flappyBird, globais.chao)) {
-          console.log("colisao");
-          som_HIT.play();
-          setTimeout(()=>{
-            mudarParaTela(Telas.GAMER_OVER);
-          }, 50);
-          return;
-        }
-        flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
-        flappyBird.y = flappyBird.y + flappyBird.velocidade; //Criando movimento de queda do Bird
-      },
-      
-      movimentos: [ //Criando os spirtes da asa batando.
-        {spriteX: 0, spriteY: 0},//acima
-        {spriteX: 0, spriteY: 26},//meio
-        {spriteX: 0, spriteY: 52},//baixo
-      ],
-    frameAtual: 0,
-    //Calculando o movimento repetitivo do bater de asa do bird.
-    atualizaOFrameAtual(){
-      //Limitando o frames.
-      const itervaloDeFrames = 9;
-      const passouOIntervalo = frames % itervaloDeFrames === 0;
-      //if para saber quando mudar o frame.
-      if(passouOIntervalo){
-        const baseDoIncremento = 1;
-        const incremento = baseDoIncremento+flappyBird.frameAtual;
-        const baseRepeticao = flappyBird.movimentos.length;
-        flappyBird.frameAtual = incremento % baseRepeticao;
-      };
+    pula() {
+      console.log('I believe I can fly')
+      flappyBird.velocidade = -flappyBird.pulo;
+      console.log(flappyBird.velocidade);
     },
 
-      desenha() {
-        flappyBird.atualizaOFrameAtual();
-        const {spriteX, spriteY} = flappyBird.movimentos[flappyBird.frameAtual];
-        //Utilizando o maximo de parametros convorme os parametros.
-        contexto.drawImage(
-          sprites,/*image,*/
-          spriteX, spriteY,
-          //flappyBird.spriteX, flappyBird.spriteY,/*sx, sy, Sprite x e Y (Coordenada onde esta o passaro na imagem).*/
-          flappyBird.largura, flappyBird.altura,/*sWidth, sHeight,(Tamanho do recorte na Sprite )*/
-          flappyBird.x, flappyBird.y,/*dx, dy, (Onde vamos densenha no Canvas)*/
-          flappyBird.largura, flappyBird.altura/*dWidth, dHeight (Tamanho do Bird)*/
-        );
+    atualiza() {
+      if(fazColisao(flappyBird, globais.chao)) {
+        console.log("colisao");
+        som_HIT.play();
+        setTimeout(()=>{
+          mudarParaTela(Telas.GAMER_OVER);
+        }, 50);
+        return;
       }
+      flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade; // Fazendo o passaro cair cada vez mais rapido.
+      flappyBird.y = flappyBird.y + flappyBird.velocidade; //Criando movimento de queda do Bird
+    },
+    
+    movimentos: [ //Criando os spirtes da asa batando.
+      {spriteX: 0, spriteY: 0},//acima
+      {spriteX: 0, spriteY: 26},//meio
+      {spriteX: 0, spriteY: 52},//baixo
+    ],
+  frameAtual: 0,
+  //Calculando o movimento repetitivo do bater de asa do bird.
+  atualizaOFrameAtual(){
+    //Limitando o frames.
+    const itervaloDeFrames = 9;
+    const passouOIntervalo = frames % itervaloDeFrames === 0;
+    //if para saber quando mudar o frame.
+    if(passouOIntervalo){
+      const baseDoIncremento = 1;
+      const incremento = baseDoIncremento+flappyBird.frameAtual;
+      const baseRepeticao = flappyBird.movimentos.length;
+      flappyBird.frameAtual = incremento % baseRepeticao;
+    };
+  },
+
+    desenha() {
+      flappyBird.atualizaOFrameAtual();
+      const {spriteX, spriteY} = flappyBird.movimentos[flappyBird.frameAtual];
+      //Utilizando o maximo de parametros convorme os parametros.
+      contexto.drawImage(
+        sprites,/*image,*/
+        spriteX, spriteY,
+        //flappyBird.spriteX, flappyBird.spriteY,/*sx, sy, Sprite x e Y (Coordenada onde esta o passaro na imagem).*/
+        flappyBird.largura, flappyBird.altura,/*sWidth, sHeight,(Tamanho do recorte na Sprite )*/
+        flappyBird.x, flappyBird.y,/*dx, dy, (Onde vamos densenha no Canvas)*/
+        flappyBird.largura, flappyBird.altura/*dWidth, dHeight (Tamanho do Bird)*/
+      );
     }
-    return flappyBird;
+  }
+  return flappyBird;
 }
 
 /*---------------------------------------------------------------------*/
@@ -246,20 +233,20 @@ function criaCanos() {
           y: canoChaoY,
         }
 
-       })
+       });
     },
 
     temColisaoComOFlappyBird(par){
       const cabecaDoFlappyBir = globais.flappyBird.y;
       const peDoFlappyBird = globais.flappyBird.y + globais.flappyBird.altura;
 
-      if ((globais.flappyBird.x + globais.flappyBird.largura) >= par.x){
-        if(cabecaDoFlappyBir <= par.canoCeu.y){
+      if ((globais.flappyBird.x-3 + globais.flappyBird.largura-3) >= par.x){
+        if(cabecaDoFlappyBir <= par.canoCeu.y-2){
           console.log('Bateu a Cabeca');
           som_HIT.play();
           return true;
         };
-        if(peDoFlappyBird >= par.canoChao.y){
+        if(peDoFlappyBird >= par.canoChao.y+2){
           console.log('Bateu o pe');
           som_HIT.play();
           return true;
@@ -284,13 +271,13 @@ function criaCanos() {
 
       canos.pares.forEach(function(par)  {
         par.x = par.x - 2;
-
         if (canos.temColisaoComOFlappyBird(par)){
           console.log('Tem colisao com o cano!');
           mudarParaTela(Telas.GAMER_OVER);
         }
         if (par.x + canos.largura <= 0){
           canos.pares.shift();
+          globais.placar.pontuacao += 1;//Pontucao por cano passado.
           //console.log('Deleta Cano')
         }
       });
@@ -305,6 +292,7 @@ return canos;
 function criaPlacar() {
   const placar = {
     pontuacao: 0,
+    score: 0,
     desenha() {
       contexto.font = '35px "VT323"';
       contexto.fillStyle = 'white'; 
@@ -312,14 +300,66 @@ function criaPlacar() {
       contexto.fillText(`${placar.pontuacao}`, canvas.width-15, 35);
     },
     atualiza() {
-      const intervaloDeFrames = 10;
+      globais.placar.score = globais.placar.pontuacao;
+     /* Forma antiga de calcular o pontos.
       const passouOIntervalo = frames % 120 === 0;
       if(passouOIntervalo){
         globais.placar.pontuacao += 1;
-      }
+        if (globais.placar.score < globais.placar.pontuacao){
+          globais.placar.score = globais.placar.pontuacao;
+        };
+      }*/
     },
   }
   return placar;
+}
+
+/*---------------------------------------------------------------------*/
+/*-                           Background                               */
+/*-                         Criando Medalha                            */
+/*---------------------------------------------------------------------*/
+const mensagemMedalha = {
+    sX: 48,
+    sY: 78,
+    w: 44,
+    h: 44,
+    x: (((canvas.width/2) - 226/2) +27), //posicao no canvas eixo X
+    y: 136,//posicao no canvas eixo y
+    //nivelMedalha: 0,
+    
+    medalha: [ //Criando os spirtes da asa batando.
+      {sX: 0,  sY: 78},//acima
+      {sX: 48, sY: 78},//meio
+      {sX: 0,  sY: 124},//baixo
+      {sX: 48, sY: 124}//baixo
+    ],
+
+    atualizaMedalha(){//Mostrar nivel da medalha.
+      mensagemMedalha.nivelMedalha = 1;
+    },
+    desenha() {
+      mensagemMedalha.atualizaMedalha();
+      const {sX, sY} = mensagemMedalha.medalha[mensagemMedalha.nivelMedalha]; 
+      contexto.drawImage (
+        sprites,
+        sX, sY,
+        mensagemMedalha.w, mensagemMedalha.h,
+        mensagemMedalha.x, mensagemMedalha.y,
+        mensagemMedalha.w, mensagemMedalha.h
+      );
+    },
+} 
+
+/*---------------------------------------------------------------------*/
+/*-                      Fazendo a Colisao                             */
+/*---------------------------------------------------------------------*/
+function fazColisao (flappyBird, chao) {
+  const flappyBirdY = flappyBird.y + flappyBird.altura;
+  const chaoY = chao.y;
+  if (flappyBirdY >= chaoY) {
+    return true;
+  }
+  return false;
 }
 
 /*---------------------------------------------------------------------*/
@@ -398,7 +438,7 @@ const Telas = {
     desenha() {
       globais.placar.desenha();
       planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
-      globais.canos.desenha();
+      //globais.canos.desenha();
       globais.chao.desenha();/*Desenhado o Chao*/
       globais.flappyBird.desenha(); /*Desenhado o Passaro*/
       mensagemGetReady.desenha();
@@ -410,7 +450,7 @@ const Telas = {
     atualiza() {
       globais.placar.atualiza();
       globais.chao.atualiza();
-     // globais.canos.atualiza();
+      //globais.canos.atualiza();
     }
   }
 };
@@ -424,6 +464,7 @@ Telas.JOGO = {
   },
   
   desenha() {
+    
     planoDeFundo.desenha(); /*Desenhado o plano de fundo*/
     globais.canos.desenha();
     globais.chao.desenha();/*Desenhado o Chao*/
@@ -451,6 +492,7 @@ Telas.GAMER_OVER = {
   },
   desenha() {
     mensagemGameOver.desenha();
+    mensagemMedalha.desenha();
 
   },
   click() {
