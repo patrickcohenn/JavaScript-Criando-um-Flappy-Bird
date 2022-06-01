@@ -5,8 +5,17 @@ console.log ('Siga @xnerdbrasil');
 /*---------------------------------------------------------------------*/
 /*-                     Criando efeito sonoro                          */
 /*---------------------------------------------------------------------*/
-const  som_HIT =new Audio();
-som_HIT.src = './efeitos/hit.wav' //som de hit
+const som_HIT =new Audio();
+const som_PULO = new Audio();
+const som_CAIU = new Audio();
+const som_PONTO = new Audio();
+
+som_HIT.src = './efeitos/hit.wav'     //som de hit
+som_PULO.src = './efeitos/pulo.wav'   //som de Pulo
+som_CAIU.src = './efeitos/caiu.wav'   //Som Caiu
+som_PONTO.src = './efeitos/ponto.wav' //Som de ponto
+
+
 
 /*---------------------------------------------------------------------*/
 /*-                          Criando Sprites                           */
@@ -130,6 +139,8 @@ function criaFlappyBird() {
       console.log('I believe I can fly')
       flappyBird.velocidade = -flappyBird.pulo;
       console.log(flappyBird.velocidade);
+      som_PULO.play();
+
     },
 
     atualiza() {
@@ -337,7 +348,9 @@ const mensagemMedalha = {
     atualizaMedalha(){//Mostrar nivel da medalha.
       mensagemMedalha.nivelMedalha = 1;
     },
+
     desenha() {
+
       mensagemMedalha.atualizaMedalha();
       const {sX, sY} = mensagemMedalha.medalha[mensagemMedalha.nivelMedalha]; 
       contexto.drawImage (
@@ -347,6 +360,7 @@ const mensagemMedalha = {
         mensagemMedalha.x, mensagemMedalha.y,
         mensagemMedalha.w, mensagemMedalha.h
       );
+      
     },
 } 
 
