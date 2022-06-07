@@ -10,10 +10,10 @@ const som_PULO = new Audio();
 const som_CAIU = new Audio();
 const som_PONTO = new Audio();
 
-som_HIT.src = './efeitos/hit.wav'     //som de hit
-som_PULO.src = './efeitos/pulo.wav'   //som de Pulo
-som_CAIU.src = './efeitos/caiu.wav'   //Som Caiu
-som_PONTO.src = './efeitos/ponto.wav' //Som de ponto
+som_HIT.src = './assets/lib/efeitos/hit.wav'     //som de hit
+som_PULO.src = './assets/lib/efeitos/pulo.wav'   //som de Pulo
+som_CAIU.src = './assets/lib/efeitos/caiu.wav'   //Som Caiu
+som_PONTO.src = './assets/lib/efeitos/ponto.wav' //Som de ponto
 
 
 
@@ -21,7 +21,7 @@ som_PONTO.src = './efeitos/ponto.wav' //Som de ponto
 /*-                          Criando Sprites                           */
 /*---------------------------------------------------------------------*/
 const sprites = new Image();
-sprites.src= './sprites.png';
+sprites.src= './assets/lib/img/sprites.png';
 
 /*---------------------------------------------------------------------*/
 /*-            Craindo Varaiavel para calcuçar frame                   */
@@ -252,16 +252,15 @@ function criaCanos() {
       const peDoFlappyBird = globais.flappyBird.y + globais.flappyBird.altura;
 
       if ((globais.flappyBird.x-3 + globais.flappyBird.largura-3) >= par.x){
-        if(cabecaDoFlappyBir <= par.canoCeu.y-2){
+        if(cabecaDoFlappyBir <= par.canoCeu.y-5){
           console.log('Bateu a Cabeca');
-          som_HIT.play();
           return true;
         };
-        if(peDoFlappyBird >= par.canoChao.y+2){
+        if(peDoFlappyBird >= par.canoChao.y+5){
           console.log('Bateu o pe');
-          som_HIT.play();
           return true;
         };
+        som_PONTO.play();
         return false;
       };
     },
@@ -284,11 +283,13 @@ function criaCanos() {
         par.x = par.x - 2;
         if (canos.temColisaoComOFlappyBird(par)){
           console.log('Tem colisao com o cano!');
+          som_HIT.play();
           mudarParaTela(Telas.GAMER_OVER);
         }
         if (par.x + canos.largura <= 0){
           canos.pares.shift();
           globais.placar.pontuacao += 1;//Pontucao por cano passado.
+          
           //console.log('Deleta Cano')
         }
       });
@@ -371,6 +372,7 @@ function fazColisao (flappyBird, chao) {
   const flappyBirdY = flappyBird.y + flappyBird.altura;
   const chaoY = chao.y;
   if (flappyBirdY >= chaoY) {
+    som_CAIU.play();
     return true;
   }
   return false;

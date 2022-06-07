@@ -1,0 +1,40 @@
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.hero-image {
+  background-image: url("/assets/lib/img/fundo.png");
+  background-color: #cccccc;
+  height: 500px;
+  background-position: 80% 62%;
+  background-repeat: no-repeat;
+  background-size: auto;
+  position: relative;
+}
+
+/*Css para centralizar*/
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: justify;
+}
+  /*Borda pra o jogo*/
+canvas {
+  border-radius: 10%;
+  display: block;
+  margin: 0 auto;
+}
+
+.fundo{
+  background-color: black;
+  color: rgb(248, 179, 3);
+  font-size: 50px;
+}
+h1{
+  align-items: top;
+  padding: 15px;
+}
